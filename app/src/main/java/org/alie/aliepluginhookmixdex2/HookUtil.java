@@ -143,16 +143,13 @@ public class HookUtil {
                     Field fieldintent = obj.getClass().getDeclaredField("intent");
                     fieldintent.setAccessible(true);
                     Intent newIntent = (Intent) fieldintent.get(obj);
-
-
                     Intent rawIntent = newIntent.getParcelableExtra("rawIntent");
                     newIntent.setComponent(rawIntent.getComponent());
 
+                    // handleMessage的时候 ActivityClientRecord是宿主的对象，所以这里要将包名进行判断修改
                     Field activityInfoField = obj.getClass().getDeclaredField("activityInfo");
                     activityInfoField.setAccessible(true);
                     ActivityInfo activityInfo = (ActivityInfo) activityInfoField.get(obj);
-//              插件的class  packageName--->loadeApk   系统   第一次 IPackageManager ----》activitry  -——》包名   ---》
-//                    不够 IPackageManage.getPackageInfo()
                     activityInfo.applicationInfo.packageName = rawIntent.getPackage() == null ? rawIntent.getComponent().getPackageName()
                             : rawIntent.getPackage();
                     hookPackgeManager();
@@ -184,7 +181,6 @@ public class HookUtil {
             sPackageManagerField.setAccessible(true);
             Object sPackageManager = sPackageManagerField.get(currentActivityThread);
 
-            Log.i("david", " handleMessage之前发生啦   ");
             // 准备好代理对象, 用来替换原始的对象
             Class<?> iPackageManagerInterface = Class.forName("android.content.pm.IPackageManager");
             Object proxy = Proxy.newProxyInstance(iPackageManagerInterface.getClassLoader()
@@ -231,14 +227,13 @@ public class HookUtil {
 
     public void putLoadedApk(String path) {
         try {
-
+            // 1.还原activityThread对象
             Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
-//            先还原activityThread对象
             Method currentActivityThreadMethod = activityThreadClass.getDeclaredMethod("currentActivityThread");
             currentActivityThreadMethod.setAccessible(true);
             Object currentActivityThread = currentActivityThreadMethod.invoke(null);
 
-//    再来还原  mPackages  对象
+            // 2.还原mPackages对象
             // 获取到 mPackages 这个静态成员变量, 这里缓存了apk包的信息
             Field mPackagesField = activityThreadClass.getDeclaredField("mPackages");
             mPackagesField.setAccessible(true);
@@ -285,7 +280,7 @@ public class HookUtil {
             Object packageObj = parsePackageMethod.invoke(packageParser, new File(path), PackageManager.GET_ACTIVITIES);
 
             Class<?> packageUserStateClass = Class.forName("android.content.pm.PackageUserState");
-            Object defaltUserState = packageUserStateClass.newInstance();
+                Object defaltUserState = packageUserStateClass.newInstance();
 //目的     generateApplicationInfo  方法  生成  ApplicationInfo
             // 需要调用 android.content.pm.PackageParser#generateActivityInfo(android.content.pm.ActivityInfo, int, android.content.pm.PackageUserState, int)
             //      generateApplicationInfo

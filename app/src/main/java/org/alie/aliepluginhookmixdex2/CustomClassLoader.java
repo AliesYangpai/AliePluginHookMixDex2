@@ -15,7 +15,7 @@ public class CustomClassLoader extends DexClassLoader {
      *                           由于真正的业务开发中我们可能是多个插件，那么为了方便管理，我们可以这样自定义路径：
      *                           odex这样存储：data/data/plugin/插件包名/odex
      *                           lib库这样存储：data/data/plugin/插件包名/lib
-     * @param libraryPath
+     * @param libraryPath lib 库的路径
      * @param parent
      */
     public CustomClassLoader(String dexPath, String optimizedDirectory, String libraryPath, ClassLoader parent) {
