@@ -152,7 +152,7 @@ public class HookUtil {
                     ActivityInfo activityInfo = (ActivityInfo) activityInfoField.get(obj);
                     activityInfo.applicationInfo.packageName = rawIntent.getPackage() == null ? rawIntent.getComponent().getPackageName()
                             : rawIntent.getPackage();
-                    hookPackgeManager();
+                    hookPackageManager();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -163,7 +163,7 @@ public class HookUtil {
         }
     }
 
-    private void hookPackgeManager() {
+    private void hookPackageManager() {
 //          hook   方法  IPackageManager.getPackgeInfo
 
         // 这一步是因为 initializeJavaContextClassLoader 这个方法内部无意中检查了这个包是否在系统安装

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    private Button btn1, btn2;
+    private Button btn1, btn2,btn3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +21,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void initView() {
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
-
+        btn3 = (Button) findViewById(R.id.btn3);
     }
 
     private void initListener() {
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
+        btn3.setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +38,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btn2:
                 goToPluginActivity("org.alie.playchess", "org.alie.playchess.MainActivity");
+                break;
+            case R.id.btn3:
+                goToPluginActivity("org.alie.aliepluginhookmixdex2", "org.alie.aliepluginhookmixdex2.SecondActivity");
                 break;
         }
     }
